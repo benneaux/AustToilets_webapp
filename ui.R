@@ -9,40 +9,55 @@
 
 library(shiny)
 library(leaflet)
+library(DT)
 
 
-shinyUI(navbarPage("Tax!", 
-                   id = "nav",
-                   
-                   tabPanel("Australian Tax Data",
-                            div(class = "outer",
+shinyUI(navbarPage("Tax!", id = "nav",
+    
+  tabPanel("Australian Tax Data",
+    div(class = "outer",
                                 
-                                tags$head(
-                                  # Include our custom CSS
-                                  includeCSS("styles.css"),
-                                  includeScript("gomap.js")
-                                ),
-                                
-                                leafletMap("map", width = "100%", height = "100%",
-                                  options=list(
-                                    center = c(-24.920527, 134.211614),
-                                    zoom = 4,
-                                    maxBounds = list(
-                                      list(-40, 112),
-                                      list(-10, 154)
-                                      ))
-                                ))),
+    tags$head(
+      # Include our custom CSS
+      includeCSS("styles.css"),
+      includeScript("gomap.js")
+    ),
+    
+    leafletOutput("map", width = "100%", height = "100%"),
+    
+    absolutePanel(id = "controls",
+                  class = "panel panel-default",
+                  fixed = TRUE,
+                  draggable = TRUE,
+                  top = 70,
+                  left = "auto",
+                  right = 20,
+                  bottom = "auto",
+                  width = 330,
+                  height = "auto",
+                  
+                  h2("Data Explorer")
+                  )
+    )),
                    
-                   tabPanel("histogram",
-                            div(class = "outer",
+  tabPanel("histogram",
+    fluidRow(
+      column(2,
+        sliderInput("bins","Number of bins:",
+                    min = 1, max = 50, value = 30
+        )),
+      column(10,
+        plotOutput("distPlot")
+      )
+    )
+),
+ tabPanel("Data",
+    mainPanel(  
+          dataTableOutput("table")
+          )
 
-                                sidebarLayout(
-                                  sidebarPanel(
-                                    sliderInput("bins","Number of bins:",
-                                                min = 1, max = 50, value = 30
-                                                )),
-                                  mainPanel(
-                                    plotOutput("distPlot")
-                                    )
-                                )))
+    )
+    
 ))
+            
+
