@@ -22,14 +22,13 @@ shinyUI(navbarPage("Tax!",
                                   includeCSS("styles.css"),
                                   includeScript("gomap.js")
                                 ),
-                                mainPanel(
                                 leafletMap("map", width = "100%", height = "100%",
                                   options=list(
-                                    center = c(37.45, -93.85),
+                                    center = c(-24.920527, 134.211614),
                                     zoom = 4,
-                                    maxBounds = list(list(15.961329,-129.92981), list(52.908902,-56.80481))
+                                    maxBounds = list(list(-41.635198, 108.378444), list(-10.331602, 154.535977))
                                   )
-                                )))
+                                ))
                    ),
                    
                    tabPanel("histogram",
