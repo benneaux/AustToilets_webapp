@@ -8,26 +8,43 @@
 #
 
 library(shiny)
+library(leaflet)
 
-# Define UI for application that draws a histogram
-shinyUI(fluidPage(
-  
-  # Application title
-  titlePanel("Australian Tax Data"),
-  
-  # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-       sliderInput("bins",
-                   "Number of bins:",
-                   min = 1,
-                   max = 50,
-                   value = 30)
-    ),
-    
-    # Show a plot of the generated distribution
-    mainPanel(
-       plotOutput("distPlot")
-    )
-  )
+
+shinyUI(navbarPage("Tax!", 
+                   id = "nav",
+                   
+                   tabPanel("Australian Tax Data",
+                            div(class = "outer",
+                                
+                                leafletMap(
+                                  "map",
+                                  width = "100%",
+                                  height = "100%"
+                                  )
+                                
+                            )
+                   ),
+                   
+                   tabPanel("histogram",
+                            div(class = "outer",
+
+                                sidebarLayout(
+                                  sidebarPanel(
+                                    sliderInput(
+                                      "bins",
+                                      "Number of bins:",
+                                      min = 1,
+                                      max = 50,
+                                      value = 30
+                                      )
+                                    ),
+                                  mainPanel(                                
+                                    plotOutput(
+                                      "distPlot"
+                                    )
+                                  )
+                                )
+                            )
+                   )
 ))

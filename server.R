@@ -6,11 +6,13 @@
 # 
 #    http://shiny.rstudio.com/
 #
-
+library(leaflet)
 library(shiny)
 
 # Define server logic required to draw a histogram
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
+  
+  map <- createLeafletMap(session, "map")
    
   output$distPlot <- renderPlot({
     
