@@ -8,11 +8,16 @@
 #
 library(leaflet)
 library(shiny)
+library(RColorBrewer)
+library(scales)
+library(lattice)
+library(dplyr)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
   
   map <- createLeafletMap(session, "map")
+  
    
   output$distPlot <- renderPlot({
     

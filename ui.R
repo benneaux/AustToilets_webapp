@@ -17,13 +17,19 @@ shinyUI(navbarPage("Tax!",
                    tabPanel("Australian Tax Data",
                             div(class = "outer",
                                 
-                                leafletMap(
-                                  "map",
-                                  width = "100%",
-                                  height = "100%"
+                                tags$head(
+                                  # Include our custom CSS
+                                  includeCSS("styles.css"),
+                                  includeScript("gomap.js")
+                                ),
+                                mainPanel(
+                                leafletMap("map", width = "100%", height = "100%",
+                                  options=list(
+                                    center = c(37.45, -93.85),
+                                    zoom = 4,
+                                    maxBounds = list(list(15.961329,-129.92981), list(52.908902,-56.80481))
                                   )
-                                
-                            )
+                                )))
                    ),
                    
                    tabPanel("histogram",
