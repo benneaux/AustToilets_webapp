@@ -22,43 +22,27 @@ shinyUI(navbarPage("Tax!",
                                   includeCSS("styles.css"),
                                   includeScript("gomap.js")
                                 ),
+                                
                                 leafletMap("map", width = "100%", height = "100%",
                                   options=list(
-                                    center = c(-24.920527,
-                                               134.211614
-                                               ),
+                                    center = c(-24.920527, 134.211614),
                                     zoom = 4,
                                     maxBounds = list(
-                                      list(
-                                        -40,
-                                        112
-                                        ),
-                                      list(
-                                        -10,
-                                        154
-                                        )
-                                      )
-                                  )
-                                ))
-                   ),
+                                      list(-40, 112),
+                                      list(-10, 154)
+                                      ))
+                                ))),
                    
                    tabPanel("histogram",
                             div(class = "outer",
 
                                 sidebarLayout(
                                   sidebarPanel(
-                                    sliderInput(
-                                      "bins",
-                                      "Number of bins:",
-                                      min = 1,
-                                      max = 50,
-                                      value = 30
-                                      )
-                                    ),
-                                  mainPanel(                                
+                                    sliderInput("bins","Number of bins:",
+                                                min = 1, max = 50, value = 30
+                                                )),
+                                  mainPanel(
                                     plotOutput("distPlot")
                                     )
-                                )
-                            )
-                   )
+                                )))
 ))
