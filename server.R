@@ -24,12 +24,8 @@ shinyServer(function(input, output, session) {
         urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
         attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
       ) %>%
-    setView(lat = -24.920527, lng = 134.211614, zoom = 4)
-  })
-  
-  observe({
-    
-    leafletProxy("map", data = cleantable)
+    setView(lat = -24.920527, lng = 134.211614, zoom = 4) %>%
+      addMarkers(data = cleantable)
   })
    
   output$distPlot <- renderPlot({
@@ -44,5 +40,5 @@ shinyServer(function(input, output, session) {
       
   })
   
-  output$table <- renderDataTable(taxdata)
+  output$table <- renderDataTable(cleantable)
 })
