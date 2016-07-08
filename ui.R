@@ -24,9 +24,20 @@ shinyUI(navbarPage("Tax!",
                                 ),
                                 leafletMap("map", width = "100%", height = "100%",
                                   options=list(
-                                    center = c(-24.920527, 134.211614),
+                                    center = c(-24.920527,
+                                               134.211614
+                                               ),
                                     zoom = 4,
-                                    maxBounds = list(list(-41.635198, 108.378444), list(-10.331602, 154.535977))
+                                    maxBounds = list(
+                                      list(
+                                        -40,
+                                        112
+                                        ),
+                                      list(
+                                        -10,
+                                        154
+                                        )
+                                      )
                                   )
                                 ))
                    ),
@@ -45,10 +56,8 @@ shinyUI(navbarPage("Tax!",
                                       )
                                     ),
                                   mainPanel(                                
-                                    plotOutput(
-                                      "distPlot"
+                                    plotOutput("distPlot")
                                     )
-                                  )
                                 )
                             )
                    )
