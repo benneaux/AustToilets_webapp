@@ -1,5 +1,7 @@
 library(dplyr)
 
+taxdata <- readRDS(file = "Data/taxdata.rds")
+
 toiletdata <- readRDS(file="Data/toiletdata.rds")
 
 cleantable <- toiletdata %>%
