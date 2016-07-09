@@ -25,7 +25,7 @@ shinyServer(function(input, output, session) {
         attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
       ) %>%
     setView(lat = -24.920527, lng = 134.211614, zoom = 4) %>%
-      addMarkers(data = cleantable)
+      addMarkers(data = cleantable[cleantable$State == "Victoria",])
   })
    
   output$distPlot <- renderPlot({
