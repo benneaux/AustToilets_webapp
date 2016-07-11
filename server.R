@@ -13,6 +13,9 @@ library(scales)
 library(lattice)
 library(dplyr)
 
+set.seed(100)
+toiletdata <- toiletdata[sample.int(nrow(toiletdata), 1000),]
+
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
 
@@ -24,10 +27,31 @@ shinyServer(function(input, output, session) {
         urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
         attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
       ) %>%
-    setView(lat = -24.920527, lng = 134.211614, zoom = 4) %>%
-      addMarkers(data = cleantable[cleantable$State == "Victoria",])
+    setView(lat = -24.920527, lng = 134.211614, zoom = 4)
   })
-   
+  
+  toiletsInBounds <- reactive({
+    if (is.null(input$map_bounds))
+      return(toiletdata[FALSE,])
+    bounds <- input$map_bounds
+    latRng <- range(bounds$north, bounds$south)
+    lngRng <- range(bounds$east, bounds$west)
+    
+    subset(toiletdata,
+           latitude >= latRng[1] & latitude <= latRng[2] &
+             longitude >= lngRng[1] & longitude <= lngRng[2])
+  })
+  
+  
+  observe({
+    leafletProxy("map", data = toiletdata) %>%
+      clearShapes() %>%
+      addCircles(~Longitude, ~Latitude, layerId=~Postcode, popup = toiletdata$Name)
+  })
+  
+
+  # When map is clicked, show a popup with city info
+
   output$distPlot <- renderPlot({
     
     # generate bins based on input$bins from ui.R
