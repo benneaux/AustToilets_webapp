@@ -30,17 +30,17 @@ shinyServer(function(input, output, session) {
     setView(lat = -24.920527, lng = 134.211614, zoom = 4)
   })
   
-  toiletsInBounds <- reactive({
-    if (is.null(input$map_bounds))
-      return(toiletdata[FALSE,])
-    bounds <- input$map_bounds
-    latRng <- range(bounds$north, bounds$south)
-    lngRng <- range(bounds$east, bounds$west)
-    
-    subset(toiletdata,
-           latitude >= latRng[1] & latitude <= latRng[2] &
-             longitude >= lngRng[1] & longitude <= lngRng[2])
-  })
+  # toiletsInBounds <- reactive({
+  #   if (is.null(input$map_bounds))
+  #     return(toiletdata[FALSE,])
+  #   bounds <- input$map_bounds
+  #   latRng <- range(bounds$north, bounds$south)
+  #   lngRng <- range(bounds$east, bounds$west)
+  #   
+  #   subset(toiletdata,
+  #          latitude >= latRng[1] & latitude <= latRng[2] &
+  #            longitude >= lngRng[1] & longitude <= lngRng[2])
+  # })
   
   
   observe({
