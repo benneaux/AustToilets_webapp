@@ -12,9 +12,9 @@ library(leaflet)
 library(DT)
 
 
-shinyUI(navbarPage("Tax!", id = "nav",
+shinyUI(navbarPage("Toilets", id = "nav",
     
-  tabPanel("Australian Tax Data",
+  tabPanel("Australian Toilet Data",
     div(class = "outer",
                                 
     tags$head(
@@ -36,27 +36,30 @@ shinyUI(navbarPage("Tax!", id = "nav",
                   width = 330,
                   height = "auto",
                   
-                  h2("Data Explorer")
+                  h2("Data Explorer"),
+                  h3("No. within map bounds:"),
+                  h4(textOutput("count"))
                   )
     )),
                    
-  tabPanel("histogram",
-    fluidRow(
-      column(2,
-        sliderInput("bins","Number of bins:",
-                    min = 1, max = 50, value = 30
-        )),
-      column(10,
-        plotOutput("distPlot")
-      )
-    )
-),
+
  tabPanel("Data",
     mainPanel(  
           dataTableOutput("table")
           )
 
-    )
+#   ),
+#  tabPanel("histogram",
+#           fluidRow(
+#             column(2,
+#                    sliderInput("bins","Number of bins:",
+#                                min = 1, max = 50, value = 30
+#                    )),
+#             column(10,
+#                    plotOutput("distPlot")
+#             )
+#           )
+ )
     
 ))
             
