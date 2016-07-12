@@ -5,6 +5,7 @@ library(tidyr)
 # taxdata <- readRDS(file = "Data/taxdata.rds")
 
 toiletdata <- readRDS(file="Data/toiletdata.rds")
+statecodes <- readRDS(file="Data/statecodes.rds")
 
 # # Code for importing data incase I screw it up.
 # toiletdata.import <- read.csv("Data/toilet_data.csv")

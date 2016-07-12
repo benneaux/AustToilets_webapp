@@ -30,7 +30,7 @@ shinyServer(function(input, output, session) {
     setView(lat = -24.920527, lng = 134.211614, zoom = 4)
   })
 
-## Toilet in bounds reactive====================
+### Toilet in bounds reactive====================
   
   toiletsInBounds <- reactive({
     
@@ -60,7 +60,7 @@ shinyServer(function(input, output, session) {
     )
   })
 
-###Add data to Leaflet Map=============
+### Add data to Leaflet Map=============
   
   observe({
     
@@ -104,7 +104,14 @@ shinyServer(function(input, output, session) {
   # When map is clicked, show a popup with city info
 
   output$table <- renderDataTable({
-    datatable(toiletsInBounds())
+    df <- toiletsInBounds() %>%
+      filter(
+        is.null(input$states) | state.abbr %in% input$states
+      ) %>%
+      mutate(Action = paste('<a class="go-map" href="" data-lat="', Latitude, '" data-long="', Longitude, '" data-suburb="', suburb, '"><i class="fa fa-crosshairs"></i></a>', sep=""))
+    action <- DT::dataTableAjax(session, df)
+    
+    datatable(df, options = list(ajax = list(url = action)), escape = FALSE)
   })
   
 #   output$distPlot <- renderPlot({
@@ -119,3 +126,18 @@ shinyServer(function(input, output, session) {
 #     
 #   })
 })
+
+### Filtering on Data tab=====
+
+observe({
+  suburbs <- if (is.null(input$states)) character(0) else {
+    filter(toiletdata, state %in% input$states) %>%
+      `$`("Suburb") %>%
+      unique() %>%
+      sort()
+  }
+  stillSelected <- isolate(input$suburbs[input$suburbs %in% suburbs])
+  updateSelectInput(session, "suburbs", choices = suburbs,
+                    selected = stillSelected)
+})
+

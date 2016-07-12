@@ -44,22 +44,14 @@ shinyUI(navbarPage("Toilets", id = "nav",
                    
 
  tabPanel("Data",
-    mainPanel(  
-          dataTableOutput("table")
-          )
-
-#   ),
-#  tabPanel("histogram",
-#           fluidRow(
-#             column(2,
-#                    sliderInput("bins","Number of bins:",
-#                                min = 1, max = 50, value = 30
-#                    )),
-#             column(10,
-#                    plotOutput("distPlot")
-#             )
-#           )
- )
+    
+    fluidRow(
+      column(3,
+        selectInput("states", "States", c("All states"="", as.character(statecodes$state.abbr)), multiple = FALSE))
+    ),
+    hr(),
+    dataTableOutput("table")
+  )
     
 ))
             
