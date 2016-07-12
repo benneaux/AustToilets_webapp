@@ -6,13 +6,17 @@ library(tidyr)
 
 toiletdata <- readRDS(file="Data/toiletdata.rds")
 
-# Code for importing data incase I screw it up.
+# # Code for importing data incase I screw it up.
 # toiletdata.import <- read.csv("Data/toilet_data.csv")
 # allpostcodes <- readRDS("Data/allpostcodes.rds")
+# statecodes <- readRDS("Data/statecodes.rds")
 # 
 # toiletdata.import <- dplyr::inner_join(toiletdata.import, statecodes, by = c("State" = "state.name"))
 # 
 # toiletdata.import <- select(toiletdata.import,
+#                             -X,
+#                             -URL,
+#                             -IconURL,
 #                             -State,
 #                             -ToiletType,
 #                             -AddressNote,
@@ -27,7 +31,7 @@ toiletdata <- readRDS(file="Data/toiletdata.rds")
 #                             -Notes,
 #                             -hover)
 # 
-# toiletdata.import <- dplyr::rename(toiletdata.import, address = Address1)
+# toiletdata.import <- dplyr::rename(toiletdata.import, address = Address1, suburb = Town)
 # 
 # toiletdata <- toiletdata.import
 # 
