@@ -12,9 +12,9 @@ library(leaflet)
 library(DT)
 
 
-shinyUI(navbarPage("Tax!", id = "nav",
+shinyUI(navbarPage("Toilets", id = "nav",
     
-  tabPanel("Australian Tax Data",
+  tabPanel("Australian Toilet Data",
     div(class = "outer",
                                 
     tags$head(

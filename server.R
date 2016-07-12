@@ -13,8 +13,9 @@ library(scales)
 library(lattice)
 library(dplyr)
 
-set.seed(100)
-toiletdata <- toiletdata[sample.int(nrow(toiletdata), 1000),]
+# set.seed(100)
+# toiletdata <- toiletdata[sample.int(nrow(toiletdata), 1000),]
+popup.text <- paste(toiletdata$Name, ", ", toiletdata$suburb, ": ", toiletdata$IconAltText) 
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
@@ -24,9 +25,9 @@ shinyServer(function(input, output, session) {
   output$map <- renderLeaflet({
     leaflet() %>%
       addTiles(
-        urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
-        attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
-      ) %>%
+#         urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
+#         attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
+       ) %>%
     setView(lat = -24.920527, lng = 134.211614, zoom = 4)
   })
   
@@ -46,7 +47,7 @@ shinyServer(function(input, output, session) {
   observe({
     leafletProxy("map", data = toiletdata) %>%
       clearShapes() %>%
-      addCircles(~Longitude, ~Latitude, layerId=~Postcode, popup = toiletdata$Name)
+      addCircles(~lon, ~lat, layerId=~suburb, popup = popup.text)
   })
   
 
@@ -64,5 +65,5 @@ shinyServer(function(input, output, session) {
       
   })
   
-  output$table <- renderDataTable(cleantable)
+  output$table <- renderDataTable(toiletdata)
 })
