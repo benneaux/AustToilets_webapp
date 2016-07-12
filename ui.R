@@ -40,23 +40,24 @@ shinyUI(navbarPage("Toilets", id = "nav",
                   )
     )),
                    
-  tabPanel("histogram",
-    fluidRow(
-      column(2,
-        sliderInput("bins","Number of bins:",
-                    min = 1, max = 50, value = 30
-        )),
-      column(10,
-        plotOutput("distPlot")
-      )
-    )
-),
+
  tabPanel("Data",
     mainPanel(  
           dataTableOutput("table")
           )
 
-    )
+#   ),
+#  tabPanel("histogram",
+#           fluidRow(
+#             column(2,
+#                    sliderInput("bins","Number of bins:",
+#                                min = 1, max = 50, value = 30
+#                    )),
+#             column(10,
+#                    plotOutput("distPlot")
+#             )
+#           )
+ )
     
 ))
             
