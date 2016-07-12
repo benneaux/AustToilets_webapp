@@ -13,15 +13,13 @@ library(scales)
 library(lattice)
 library(dplyr)
 
-options(digits = 16)
-# set.seed(100)
-# toiletdata <- toiletdata[sample.int(nrow(toiletdata), 1000),]
 popup.text <- paste(toiletdata$Name, ", ", toiletdata$suburb, ": ", toiletdata$IconAltText) 
 
 # Define server logic required to draw a histogram
+
 shinyServer(function(input, output, session) {
 
-#  map <- createLeafletMap(session, "map")
+### Create Leaflet map object=========
   
   output$map <- renderLeaflet({
     leaflet() %>%
@@ -32,37 +30,75 @@ shinyServer(function(input, output, session) {
     setView(lat = -24.920527, lng = 134.211614, zoom = 4)
   })
 
-
+## Toilet in bounds reactive====================
   
   toiletsInBounds <- reactive({
-    if (is.null(input$map_bounds))
+    
+    if (is.null(
+      input$map_bounds
+      ))
       return(toiletdata[FALSE,])
+    
     bounds <- input$map_bounds
-    latRng <- range(bounds$north, bounds$south)
-    lngRng <- range(bounds$east, bounds$west)
     
-    subset(toiletdata,
-           Latitude > latRng[1] & Latitude < latRng[2] &
-             Longitude > lngRng[1] & Longitude < lngRng[2])
+    latRng <- range(
+      bounds$north, 
+      bounds$south
+      )
     
+    lngRng <- range(
+      bounds$east,
+      bounds$west
+      )
+    
+    subset(
+      toiletdata,
+      Latitude > latRng[1] 
+      & Latitude < latRng[2] 
+      & Longitude > lngRng[1] 
+      & Longitude < lngRng[2]
+    )
   })
 
+###Add data to Leaflet Map=============
   
   observe({
+    
     leafletProxy("map", data = toiletdata) %>%
+      
       clearShapes() %>%
-      addCircleMarkers(~Longitude, ~Latitude, popup = popup.text, radius = 8, clusterOption = TRUE) %>%
-      fitBounds(lng1 = max(toiletdata$Longitude), lat1 = max(toiletdata$Latitude),
-                lng2 = min(toiletdata$Longitude), lat2 = min(toiletdata$Latitude))
+      
+      addCircleMarkers(
+        ~Longitude, 
+        ~Latitude, 
+        popup = popup.text, 
+        radius = 8, 
+        clusterOption = TRUE) %>%
+      
+      fitBounds(
+        lng1 = max(toiletdata$Longitude), 
+        lat1 = max(toiletdata$Latitude),
+        lng2 = min(toiletdata$Longitude), 
+        lat2 = min(toiletdata$Latitude)
+        )
   })
-  
+
+### Number of toilets in bounds - count=========  
+    
   output$count <- renderText(
+    
     nrow(toiletsInBounds())
-  )
   
+  )
+
+### Range of map bounds==========    
   output$bounds <- reactive({
-    list(input$map_bounds$north,
-    input$map_bounds$east)
+    
+    list(
+      input$map_bounds$north,
+      input$map_bounds$east
+      )
+ 
   })
 
   # When map is clicked, show a popup with city info
