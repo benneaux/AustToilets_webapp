@@ -13,6 +13,7 @@ library(scales)
 library(lattice)
 library(dplyr)
 
+options(digits = 16)
 # set.seed(100)
 # toiletdata <- toiletdata[sample.int(nrow(toiletdata), 1000),]
 popup.text <- paste(toiletdata$Name, ", ", toiletdata$suburb, ": ", toiletdata$IconAltText) 
@@ -30,6 +31,8 @@ shinyServer(function(input, output, session) {
        ) %>%
     setView(lat = -24.920527, lng = 134.211614, zoom = 4)
   })
+
+
   
   toiletsInBounds <- reactive({
     if (is.null(input$map_bounds))
@@ -39,21 +42,34 @@ shinyServer(function(input, output, session) {
     lngRng <- range(bounds$east, bounds$west)
     
     subset(toiletdata,
-           lat >= latRng[1] & lal <= latRng[2] &
-             lon >= lngRng[1] & lon <= lngRng[2])
+           lat > latRng[1] & lat < latRng[2] &
+             lon > lngRng[1] & lon < lngRng[2])
+    
   })
-  
+
   
   observe({
     leafletProxy("map", data = toiletdata) %>%
       clearShapes() %>%
-      addCircles(~lon, ~lat, layerId=~suburb, popup = popup.text)
+      addCircleMarkers(~lon, ~lat, popup = popup.text, radius = 8, clusterOption = TRUE) %>%
+      fitBounds(lng1 = max(toiletdata$lon), lat1 = max(toiletdata$lat),
+                lng2 = min(toiletdata$lon), lat2 = min(toiletdata$lat))
   })
   
+  output$count <- renderText(
+    nrow(toiletsInBounds())
+  )
+  
+  output$bounds <- reactive({
+    list(input$map_bounds$north,
+    input$map_bounds$east)
+  })
 
   # When map is clicked, show a popup with city info
 
-  output$table <- renderDataTable(toiletdata)
+  output$table <- renderDataTable({
+    datatable(toiletsInBounds())
+  })
   
 #   output$distPlot <- renderPlot({
 #     
