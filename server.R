@@ -42,8 +42,8 @@ shinyServer(function(input, output, session) {
     lngRng <- range(bounds$east, bounds$west)
     
     subset(toiletdata,
-           lat > latRng[1] & lat < latRng[2] &
-             lon > lngRng[1] & lon < lngRng[2])
+           Latitude > latRng[1] & Latitude < latRng[2] &
+             Longitude > lngRng[1] & Longitude < lngRng[2])
     
   })
 
@@ -51,9 +51,9 @@ shinyServer(function(input, output, session) {
   observe({
     leafletProxy("map", data = toiletdata) %>%
       clearShapes() %>%
-      addCircleMarkers(~lon, ~lat, popup = popup.text, radius = 8, clusterOption = TRUE) %>%
-      fitBounds(lng1 = max(toiletdata$lon), lat1 = max(toiletdata$lat),
-                lng2 = min(toiletdata$lon), lat2 = min(toiletdata$lat))
+      addCircleMarkers(~Longitude, ~Latitude, popup = popup.text, radius = 8, clusterOption = TRUE) %>%
+      fitBounds(lng1 = max(toiletdata$Longitude), lat1 = max(toiletdata$Latitude),
+                lng2 = min(toiletdata$Longitude), lat2 = min(toiletdata$Latitude))
   })
   
   output$count <- renderText(
