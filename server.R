@@ -20,14 +20,23 @@ popup.text <- paste(toiletdata$Name, ", ", toiletdata$suburb, ": ", toiletdata$I
 shinyServer(function(input, output, session) {
 
 ### Create Leaflet map object=========
-  
+
+  colour <- colorFactor(terrain.colors(8), toiletdata$IconAltText)
+    
   output$map <- renderLeaflet({
     leaflet() %>%
-      addTiles(
-#         urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
-#         attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
-       ) %>%
-    setView(lat = -24.920527, lng = 134.211614, zoom = 4)
+      addProviderTiles(
+        "CartoDB.Positron",
+         options = providerTileOptions(
+           noWrap = TRUE
+           )) %>%
+                       
+#       addTiles(
+# #         urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
+# #         attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
+#       ) %>%
+      setView(lat = -24.920527, lng = 134.211614, zoom = 4) %>%
+      addLegend("bottomleft",pal=colour, values=levels(toiletdata$IconAltText), opacity=1)
   })
 
 ### Toilet in bounds reactive====================
@@ -72,8 +81,16 @@ shinyServer(function(input, output, session) {
         ~Longitude, 
         ~Latitude, 
         popup = popup.text, 
-        radius = 8, 
-        clusterOptions = TRUE) %>%
+        radius = 6,
+        weight = 2,
+        opacity = 1,
+        fillOpacity = 0.8,
+        clusterOptions = markerClusterOptions(
+          zoomToBoundsOnClick = TRUE,
+          removeOutsideVisibleBounds = TRUE,
+          disableClusteringAtZoom = 14
+          ),
+        color=~colour(IconAltText)) %>%
       
       fitBounds(
         lng1 = max(toiletdata$Longitude), 
@@ -81,6 +98,8 @@ shinyServer(function(input, output, session) {
         lng2 = min(toiletdata$Longitude), 
         lat2 = min(toiletdata$Latitude)
         )
+
+      
   })
 
 ### Number of toilets in bounds - count=========  
@@ -92,30 +111,13 @@ shinyServer(function(input, output, session) {
   )
 
 ### Range of map bounds==========    
-  output$bounds <- reactive({
-    
-    list(
-      input$map_bounds$north,
-      input$map_bounds$east
-      )
- 
-  })
-
-  # When map is clicked, show a popup with city info
-
-
+  # output$bounds <- renderPrint({
+  #   
+  #   brushedPoints(toiletdata, input$map_brush)
+  # 
+  # })
   
-#   output$distPlot <- renderPlot({
-#     
-#     # generate bins based on input$bins from ui.R
-#     x    <- taxdata[, 2] 
-#     bins <- seq(min(x), max(x), length.out = input$bins + 1)
-#     
-#     # draw the histogram with the specified number of bins
-#     hist(x, breaks = bins, col = 'darkgray', border = 'white')
-#     
-#     
-#   })
+    
 
 
 ### Filtering on Data tab=====

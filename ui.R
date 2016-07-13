@@ -39,6 +39,7 @@ shinyUI(navbarPage("Toilets", id = "nav",
                   h2("Data Explorer"),
                   h3("No. within map bounds:"),
                   h4(textOutput("count"))
+                  #h4(verbatimTextOutput("bounds"))
                   )
     )),
                    
