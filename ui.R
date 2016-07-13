@@ -47,7 +47,13 @@ shinyUI(navbarPage("Toilets", id = "nav",
     
     fluidRow(
       column(3,
-        selectInput("states", "States", c("All states"="", structure(as.character(statecodes$state.abbr), names=as.character(statecodes$state.name))), multiple = TRUE))
+        selectInput("states", "States", c("All states"="",  as.character(statecodes$state.abbr)), multiple = TRUE)
+    ),
+    column(3,
+           conditionalPanel("input.states",
+                            selectInput("suburbs", "Suburbs", c("All suburbs"=""), multiple=TRUE)
+           )
+    )
     ),
     hr(),
     dataTableOutput("table")

@@ -73,7 +73,7 @@ shinyServer(function(input, output, session) {
         ~Latitude, 
         popup = popup.text, 
         radius = 8, 
-        clusterOption = TRUE) %>%
+        clusterOptions = TRUE) %>%
       
       fitBounds(
         lng1 = max(toiletdata$Longitude), 
@@ -103,16 +103,7 @@ shinyServer(function(input, output, session) {
 
   # When map is clicked, show a popup with city info
 
-  output$table <- renderDataTable({
-    df <- toiletsInBounds() %>%
-      filter(
-        is.null(input$states) | state.abbr %in% input$states
-      ) %>%
-      mutate(Action = paste('<a class="go-map" href="" data-lat="', Latitude, '" data-long="', Longitude, '" data-suburb="', suburb, '"><i class="fa fa-crosshairs"></i></a>', sep=""))
-    action <- DT::dataTableAjax(session, df)
-    
-    datatable(df, options = list(ajax = list(url = action)), escape = FALSE)
-  })
+
   
 #   output$distPlot <- renderPlot({
 #     
@@ -125,19 +116,31 @@ shinyServer(function(input, output, session) {
 #     
 #     
 #   })
-})
+
 
 ### Filtering on Data tab=====
 
 observe({
-  suburbs <- if (is.null(input$states)) character(0) else {
-    filter(toiletdata, state %in% input$states) %>%
-      `$`("Suburb") %>%
+  suburbs <- if (is.null(input$states)) { character(0) 
+  } else {
+    filter(toiletdata, state.abbr %in% input$states) %>%
+      `$`('suburb') %>%
       unique() %>%
       sort()
   }
-  stillSelected <- isolate(input$suburbs[input$suburbs %in% suburbs])
-  updateSelectInput(session, "suburbs", choices = suburbs,
-                    selected = stillSelected)
+   stillSelected <- isolate(input$suburbs[input$suburbs %in% suburbs])
+   updateSelectInput(session, "suburbs", choices = as.character(suburbs),
+                     selected = stillSelected)
 })
-
+output$table <- renderDataTable({
+  df <- toiletdata %>%
+    filter(
+      is.null(input$states) | state.abbr %in% input$states,
+      is.null(input$suburbs) | suburb %in% input$suburbs
+    ) %>%
+    mutate(Action = paste('<a class="go-map" href="" data-lat="', Latitude, '" data-long="', Longitude, '" data-suburb="', suburb, '"><i class="fa fa-crosshairs"></i></a>', sep=""))
+  action <- DT::dataTableAjax(session, df)
+  
+  DT::datatable(df, options = list(ajax = list(url = action)), escape = FALSE)
+})
+})
