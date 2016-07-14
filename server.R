@@ -13,7 +13,12 @@ library(scales)
 library(lattice)
 library(dplyr)
 
-popup.text <- paste(toiletdata$Name, ", ", toiletdata$suburb, ": ", toiletdata$IconAltText) 
+popup.text <- paste(toiletdata$Name,
+                    ", ",
+                    toiletdata$suburb,
+                    ": ",
+                    toiletdata$IconAltText
+                    ) 
 
 # Define server logic required to draw a histogram
 
@@ -29,15 +34,20 @@ shinyServer(function(input, output, session) {
         "CartoDB.Positron",
          options = providerTileOptions(
            noWrap = TRUE
-           )) %>%
-                       
-#       addTiles(
-# #         urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
-# #         attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
-#       ) %>%
-      setView(lat = -24.920527, lng = 134.211614, zoom = 4) %>%
-      addLegend("bottomleft",pal=colour, values=levels(toiletdata$IconAltText), opacity=1)
-  })
+           )
+        ) %>%
+      setView(lat = -24.920527, 
+              lng = 134.211614, 
+              zoom = 4
+              ) %>%
+      addLegend("bottomleft",
+                pal=colour, 
+                values=levels(
+                  toiletdata$IconAltText
+                  ),
+                opacity=1
+                )
+    })
 
 ### Toilet in bounds reactive====================
   
@@ -46,7 +56,9 @@ shinyServer(function(input, output, session) {
     if (is.null(
       input$map_bounds
       ))
-      return(toiletdata[FALSE,])
+      return(
+        toiletdata[FALSE,]
+        )
     
     bounds <- input$map_bounds
     
@@ -84,14 +96,11 @@ shinyServer(function(input, output, session) {
   
   observe({
     
-    leafletProxy("map", data = toiletdata) %>%
+    leafletProxy("map", 
+                 data = toiletdata
+                 ) %>%
       
       clearShapes() %>%
-      # addMarkers(
-      #   ~Longitude,
-      #   ~Latitude,
-      #   popup=popup.text,
-      #   clusterOptions = markerClusterOptions())%>%
       addCircleMarkers(
         ~Longitude,
         ~Latitude,
@@ -106,7 +115,8 @@ shinyServer(function(input, output, session) {
           removeOutsideVisibleBounds = TRUE,
           disableClusteringAtZoom = 14
           ),
-        color=~colour(IconAltText)) %>%
+        color=~colour(IconAltText)
+        ) %>%
 
       fitBounds(
         lng1 = max(toiletdata$Longitude), 
@@ -126,35 +136,58 @@ shinyServer(function(input, output, session) {
   
   )
   
-
-### Range of map bounds==========    
-  
-    
-
-
 ### Filtering on Data tab=====
 
 observe({
-  suburbs <- if (is.null(input$states)) { character(0) 
+  suburbs <- if (is.null(input$states)) {
+    character(0)
   } else {
-    filter(toiletdata, state.abbr %in% input$states) %>%
-      `$`('suburb') %>%
+    filter(
+      toiletdata, 
+      state.abbr %in% input$states
+      ) %>%
+      `$`('suburb') 
+    %>%
       unique() %>%
       sort()
   }
-   stillSelected <- isolate(input$suburbs[input$suburbs %in% suburbs])
-   updateSelectInput(session, "suburbs", choices = as.character(suburbs),
-                     selected = stillSelected)
-})
+   stillSelected <- isolate(
+     input$suburbs[input$suburbs %in% suburbs]
+     )
+   updateSelectInput(session,
+                     "suburbs",
+                     choices = as.character(
+                       suburbs
+                       ),
+                     selected = stillSelected
+                     )
+   })
 output$table <- renderDataTable({
+  
   df <- toiletdata %>%
     filter(
       is.null(input$states) | state.abbr %in% input$states,
       is.null(input$suburbs) | suburb %in% input$suburbs
     ) %>%
-    mutate(Action = paste('<a class="go-map" href="" data-lat="', Latitude, '" data-long="', Longitude, '" data-suburb="', suburb, '"><i class="fa fa-crosshairs"></i></a>', sep=""))
+    mutate(
+      Action = paste('<a class="go-map" href="" data-lat="',
+                     Latitude,
+                     '" data-long="',
+                     Longitude,
+                     '" data-suburb="',
+                     suburb,
+                     '"><i class="fa fa-crosshairs"></i></a>',
+                     sep=""
+                     )
+      )
   action <- DT::dataTableAjax(session, df)
   
-  DT::datatable(df, options = list(ajax = list(url = action)), escape = FALSE)
-})
+  DT::datatable(df,
+                options = list(
+                  ajax = list(
+                    url = action)
+                  ), 
+                escape = FALSE
+                )
+  })
 })

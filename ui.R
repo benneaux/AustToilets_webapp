@@ -11,11 +11,13 @@ library(shiny)
 library(leaflet)
 library(DT)
 
-
-shinyUI(navbarPage("Toilets", id = "nav",
+shinyUI(
+  navbarPage("Toilets",
+    id = "nav",
     
   tabPanel("Australian Toilet Data",
-    div(class = "outer",
+    div(
+      class = "outer",
                                 
     tags$head(
       # Include our custom CSS
@@ -23,7 +25,10 @@ shinyUI(navbarPage("Toilets", id = "nav",
       includeScript("gomap.js")
     ),
     
-    leafletOutput("map", width = "100%", height = "100%"),
+    leafletOutput("map",
+                  width = "100%",
+                  height = "100%"
+                  ),
     
     absolutePanel(id = "controls",
                   class = "panel panel-default",
@@ -37,30 +42,50 @@ shinyUI(navbarPage("Toilets", id = "nav",
                   height = "auto",
                   
                   h2("Data Explorer"),
+                  
                   h3("No. within map bounds:"),
+                  
                   h4(textOutput("count")),
+                  
                   h4("Info on Click:",
                      verbatimTextOutput("click_text"))
                   )
-    )),
+    )
+  ),
                    
 
  tabPanel("Data",
     
     fluidRow(
       column(3,
-        selectInput("states", "States", c("All states"="",  as.character(statecodes$state.abbr)), multiple = TRUE)
-    ),
+        selectInput("states",
+                    "States",
+                    c("All states"="",
+                      as.character(
+                        statecodes$state.abbr
+                        )
+                      ),
+                    multiple = TRUE
+                    )
+        ),
     column(3,
-           conditionalPanel("input.states",
-                            selectInput("suburbs", "Suburbs", c("All suburbs"=""), multiple=TRUE)
+           conditionalPanel(
+             "input.states",
+             selectInput(
+               "suburbs",
+               "Suburbs",
+               c("All suburbs"=""), 
+               multiple=TRUE
+               )
+             )
            )
-    )
     ),
-    hr(),
-    dataTableOutput("table")
-  )
     
-))
+    hr(),
+    
+    dataTableOutput("table")
+    )
+ )
+ )
             
 
