@@ -68,6 +68,17 @@ shinyServer(function(input, output, session) {
       & Longitude < lngRng[2]
     )
   })
+  
+  observe({
+    click <- input$map_marker_click
+    if (is.null(
+      click
+    )) return()
+      selection <- paste(click)
+      output$click_text <- renderText({
+        selection
+      })
+  })
 
 ### Add data to Leaflet Map=============
   
@@ -76,22 +87,27 @@ shinyServer(function(input, output, session) {
     leafletProxy("map", data = toiletdata) %>%
       
       clearShapes() %>%
-      
+      # addMarkers(
+      #   ~Longitude,
+      #   ~Latitude,
+      #   popup=popup.text,
+      #   clusterOptions = markerClusterOptions())%>%
       addCircleMarkers(
-        ~Longitude, 
-        ~Latitude, 
-        popup = popup.text, 
+        ~Longitude,
+        ~Latitude,
+        popup = popup.text,
         radius = 6,
         weight = 2,
         opacity = 1,
         fillOpacity = 0.8,
+        layerId = ~suburb,
         clusterOptions = markerClusterOptions(
           zoomToBoundsOnClick = TRUE,
           removeOutsideVisibleBounds = TRUE,
           disableClusteringAtZoom = 14
           ),
         color=~colour(IconAltText)) %>%
-      
+
       fitBounds(
         lng1 = max(toiletdata$Longitude), 
         lat1 = max(toiletdata$Latitude),
@@ -109,13 +125,9 @@ shinyServer(function(input, output, session) {
     nrow(toiletsInBounds())
   
   )
+  
 
 ### Range of map bounds==========    
-  # output$bounds <- renderPrint({
-  #   
-  #   brushedPoints(toiletdata, input$map_brush)
-  # 
-  # })
   
     
 
