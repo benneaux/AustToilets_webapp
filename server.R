@@ -24,17 +24,17 @@ shinyServer(function(input, output, session) {
   
   map = leaflet() %>%
     
-      addProviderTiles(
-        "CartoDB.Positron",
-         options = providerTileOptions(
-           noWrap = TRUE
-           )
-        ) %>%
-    
-      setView(lat = -24.920527, 
-              lng = 134.211614, 
-              zoom = 4
-              ) %>%
+    addProviderTiles(
+      "CartoDB.Positron",
+       options = providerTileOptions(
+         noWrap = TRUE
+         )
+      ) %>%
+   
+      # setView(lat = -24.920527, 
+      #         lng = 134.211614, 
+      #         zoom = 4
+      #         ) %>%
     
       addLegend(
         "bottomleft",
@@ -94,6 +94,8 @@ shinyServer(function(input, output, session) {
                  data = toiletdata) %>%
       
       clearShapes() %>%
+      
+      addPolygons(data = hne, layerId = "LHD") %>%
       
       addCircleMarkers(
         ~Longitude,

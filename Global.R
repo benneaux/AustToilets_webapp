@@ -1,12 +1,19 @@
 library(dplyr)
 library(magrittr)
 library(tidyr)
+library(rgdal)
 
 # taxdata <- readRDS(file = "Data/taxdata.rds")
 
 toiletdata <- readRDS(file="Data/toiletdata.rds")
 statecodes <- readRDS(file="Data/statecodes.rds")
 
+###Import Shape Data=======
+
+hne <- readOGR("LHDMapfiles/HNELHD only.shp", layer = "HNELHD only")
+
+
+###Import backup code==========
 # # Code for importing data incase I screw it up.
 # toiletdata.import <- read.csv("Data/toilet_data.csv")
 # allpostcodes <- readRDS("Data/allpostcodes.rds")
