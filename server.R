@@ -30,13 +30,7 @@ if (length(new_packages)) {
 } else {
   load_packages(required_packages)
 }
-# library(leaflet)
-# library(shiny)
-# library(RColorBrewer)
-# library(scales)
-# library(lattice)
-# library(dplyr)
-# library(ggplot2)
+
 
 # Define server logic required to draw a histogram
 
@@ -318,7 +312,7 @@ observe({
     
 output$table <- DT::renderDataTable({
   
-  df <- toiletdata %>%
+  df <- cleantable %>%
     filter(
       is.null(input$states) | state.abbr %in% input$states,
       is.null(input$suburbs) | suburb %in% input$suburbs
@@ -349,7 +343,9 @@ output$table <- DT::renderDataTable({
     options = list(
       ajax = list(
         url = action
-      )
+      ),
+      columnDefs = list(list(className = 'dt-center', targets = 1:(length(cleantable)+1))),
+      pageLength = 15
     ),
     escape = FALSE
   )

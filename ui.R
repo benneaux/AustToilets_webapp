@@ -40,6 +40,7 @@ shinyUI(
                     bottom = "auto",
                     width = 400,
                     height = "auto",
+                    opacity = 1,
                     
                     h2("Data Explorer"),
                     

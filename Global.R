@@ -8,7 +8,20 @@ library(rgeos)
 
 toiletdata <- readRDS(file="Data/toiletdata.rds")
 statecodes <- readRDS(file="Data/statecodes.rds")
-
+cleantable <- select(
+  toiletdata,
+  -contains("Access"),
+  -contains("required"),
+  -contains("disposal"),
+  -Male,
+  -Female,
+  -Showers,
+  -MLAK,
+  -Unisex,
+  -BabyChange,
+  -DrinkingWater,
+  -Parking
+  )
 
 ###Import Shape Data=======
 
