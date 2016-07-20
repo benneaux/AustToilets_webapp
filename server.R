@@ -19,23 +19,27 @@ shinyServer(function(input, output, session) {
 
 ### Create Leaflet map object=========
 
-  colour <- colorFactor(rainbow(3), 
-                        toiletdata$IsOpen)
+  colour <- colorFactor(
+    rainbow(3),
+    toiletdata$IsOpen
+    )
   
   map = leaflet() %>%
-    addTiles(options = tileOptions(minZoom = 7)) %>%
-    # addProviderTiles(
-    #   "CartoDB.Positron",
-    #    options = providerTileOptions(
-    #      noWrap = TRUE
-    #      )
-    #   ) %>%
+    addProviderTiles(
+      "CartoDB.Positron",
+       options = providerTileOptions(
+         noWrap = TRUE,
+         minZoom = 7,
+         unloadInvisibleTiles = TRUE
+         )
+      ) %>%
 
     
       addLegend(
         "bottomleft",
         pal=colour, 
         values=levels(toiletdata$IsOpen),
+        labels=levels(toiletdata$IsOpen),
         opacity=1
       )
    
@@ -86,15 +90,20 @@ shinyServer(function(input, output, session) {
   
   observe({
     
-    leafletProxy("map",
-                 data = toiletdata
-                 ) %>%
+    leafletProxy(
+      "map",
+      data = toiletdata
+    ) %>%
 
       clearShapes() %>%
       
-      addPolygons(data = hne, layerId = "LHD") %>%
+      addPolygons(
+        data = hne,
+        layerId = "LHD"
+      ) %>%
       
       addCircleMarkers(
+        
         ~Longitude,
         ~Latitude,
         radius = 6,
@@ -104,41 +113,39 @@ shinyServer(function(input, output, session) {
         layerId = ~suburb,
 
         clusterOptions = markerClusterOptions(
+        
           zoomToBoundsOnClick = TRUE,
           removeOutsideVisibleBounds = TRUE,
           disableClusteringAtZoom = 12
-          ),
+        
+        ),
 
         color=~colour(IsOpen)
 
-        ) %>%
+      ) %>%
+      
       setMaxBounds(
+      
         lat1 = map.buffer[4],
         lat2 = map.buffer[2],
         lng1 = map.buffer[3],
         lng2 = map.buffer[1]
+      
       ) %>%
 
       fitBounds(
+      
         lat1 = map.bounds[4],
         lat2 = map.bounds[2],
         lng1 = map.bounds[3],
         lng2 = map.bounds[1]
-        )
-      
-
-
-      # fitBounds(
-      #   lng1 = max(toiletdata$Longitude), 
-      #   lat1 = max(toiletdata$Latitude),
-      #   lng2 = min(toiletdata$Longitude), 
-      #   lat2 = min(toiletdata$Latitude)
-      #   )
-
+    
+      )
       
   })
 
   # Show a popup at the given location
+  
   showToiletPopup <- function(lat, lng) {
     
     selectedToilet <- toiletdata[
@@ -147,6 +154,7 @@ shinyServer(function(input, output, session) {
       , ]
     
       content <- as.character(
+      
         tagList(
           tags$h4(selectedToilet$Name),
           tags$strong(
@@ -161,8 +169,10 @@ shinyServer(function(input, output, session) {
             ),
           tags$br(),
           tags$br(),
-          sprintf("Access: %s", 
-                  selectedToilet$IconAltText)
+          sprintf(
+            "Access: %s", 
+            selectedToilet$IconAltText
+            )
           )
         )
     
@@ -285,18 +295,23 @@ output$table <- DT::renderDataTable({
         sep=""
         )
       ) %>%
-    select(Find, everything())
+    
+    select(
+      Find,
+      everything()
+      )
 
   
   action <- DT::dataTableAjax(session,df)
   
-  DT::datatable(df,
-                options = list(
-                  ajax = list(
-                    url = action
-                    )
-                  ),
-                escape = FALSE
-                )
+  DT::datatable(
+    df,
+    options = list(
+      ajax = list(
+        url = action
+      )
+    ),
+    escape = FALSE
+  )
 })
 })

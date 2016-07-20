@@ -9,9 +9,10 @@ library(rgeos)
 toiletdata <- readRDS(file="Data/toiletdata.rds")
 statecodes <- readRDS(file="Data/statecodes.rds")
 
+
 ###Import Shape Data=======
 
-hne <- readOGR("LHDMapfiles/HNELHD only.shp", layer = "HNELHD only")
+hne <- readOGR("LHDMapfiles/HNELHD only.shp", layer = "HNELHD only", verbose = FALSE)
 
 map.bounds <- c(gBoundary(hne)@bbox)
 
