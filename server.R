@@ -6,13 +6,37 @@
 # 
 #    http://shiny.rstudio.com/
 #
-library(leaflet)
-library(shiny)
-library(RColorBrewer)
-library(scales)
-library(lattice)
-library(dplyr)
-library(ggplot2)
+# Replace "LIST REQUIRED PACKAGES" with a list of the packages needed for this project:
+# e.g. "ggplot2", "dplyr", "magrittr"
+# Leave everything else as it is.
+
+required_packages <- c("leaflet", "shiny", "dplyr", "ggplot2")
+new_packages <- required_packages[!(required_packages %in% installed.packages()[,"Package"])]
+
+load_packages <- function(x) {
+  lapply(x,
+    FUN = function(x) {
+      do.call(
+        "require",
+        list(x)
+      )
+    }
+  )
+}
+
+if (length(new_packages)) {
+  install.packages(new_packages)
+  load_packages(required_packages)
+} else {
+  load_packages(required_packages)
+}
+# library(leaflet)
+# library(shiny)
+# library(RColorBrewer)
+# library(scales)
+# library(lattice)
+# library(dplyr)
+# library(ggplot2)
 
 # Define server logic required to draw a histogram
 
