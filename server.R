@@ -12,6 +12,7 @@ library(RColorBrewer)
 library(scales)
 library(lattice)
 library(dplyr)
+library(ggplot2)
 
 # Define server logic required to draw a histogram
 
@@ -96,32 +97,30 @@ shinyServer(function(input, output, session) {
     ) %>%
 
       clearShapes() %>%
-      
-      addPolygons(
-        data = hne,
-        layerId = "LHD"
-      ) %>%
-      
+
       addCircleMarkers(
-        
-        ~Longitude,
-        ~Latitude,
+        lat = ~Latitude,
+        lng = ~Longitude,
         radius = 6,
         weight = 2,
         opacity = 1,
         fillOpacity = 0.8,
-        layerId = ~suburb,
 
         clusterOptions = markerClusterOptions(
-        
+
           zoomToBoundsOnClick = TRUE,
           removeOutsideVisibleBounds = TRUE,
-          disableClusteringAtZoom = 12
-        
+          disableClusteringAtZoom = 10
+
         ),
 
         color=~colour(IsOpen)
 
+      ) %>%
+      
+      addPolylines(
+        data = hne,
+        layerId = "LHD"
       ) %>%
 
       # setMaxBounds(
@@ -144,7 +143,7 @@ shinyServer(function(input, output, session) {
       
   })
 
-  # Show a popup at the given location
+### Show a popup at the given location =====
   
   showToiletPopup <- function(lat, lng) {
     
@@ -211,14 +210,31 @@ shinyServer(function(input, output, session) {
   })
   
   session$onSessionEnded(clickObs$suspend)
-  
-  ### Number of toilets in bounds - count=========  
+
+### Number of toilets in bounds - count=========  
     
   output$count <- renderText(
     
     nrow(toiletsInBounds())
   
   )
+  
+### Output Plot =====
+  
+  output$isOpenPlot <- renderPlot({
+    if(nrow(toiletsInBounds()) == 0)
+      return(NULL)
+    
+    qplot(
+      x = IsOpen,
+      data = toiletsInBounds(),
+      geom = "bar",
+      fill = I(rainbow(3)),
+      main = "Toilets by Opening Hours",
+      xlab = NULL
+    )
+    
+  })
   
 ### Filtering on Data tab=====
 

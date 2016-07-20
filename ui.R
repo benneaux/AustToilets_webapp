@@ -45,7 +45,10 @@ shinyUI(
                     
                     h3("No. within map bounds:"),
                     
-                    h4(textOutput("count"))
+                    h4(textOutput("count")),
+                    
+                    plotOutput("isOpenPlot")
+                    
                     )
       )
     ),
