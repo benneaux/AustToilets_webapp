@@ -29,7 +29,7 @@ shinyServer(function(input, output, session) {
       "CartoDB.Positron",
        options = providerTileOptions(
          noWrap = TRUE,
-         minZoom = 7,
+         #minZoom = 7,
          unloadInvisibleTiles = TRUE
          )
       ) %>%
@@ -123,18 +123,18 @@ shinyServer(function(input, output, session) {
         color=~colour(IsOpen)
 
       ) %>%
-      
-      setMaxBounds(
-      
-        lat1 = map.buffer[4],
-        lat2 = map.buffer[2],
-        lng1 = map.buffer[3],
-        lng2 = map.buffer[1]
-      
-      ) %>%
 
+      # setMaxBounds(
+      #
+      #   lat1 = map.buffer[4],
+      #   lat2 = map.buffer[2],
+      #   lng1 = map.buffer[3],
+      #   lng2 = map.buffer[1]
+      #
+      # ) %>%
+      # 
       fitBounds(
-      
+
         lat1 = map.bounds[4],
         lat2 = map.bounds[2],
         lng1 = map.bounds[3],
