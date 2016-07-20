@@ -2,6 +2,7 @@ library(dplyr)
 library(magrittr)
 library(tidyr)
 library(rgdal)
+library(rgeos)
 
 # taxdata <- readRDS(file = "Data/taxdata.rds")
 
@@ -11,6 +12,10 @@ statecodes <- readRDS(file="Data/statecodes.rds")
 ###Import Shape Data=======
 
 hne <- readOGR("LHDMapfiles/HNELHD only.shp", layer = "HNELHD only")
+
+map.bounds <- c(gBoundary(hne)@bbox)
+
+map.buffer <- c(gBuffer(hne)@bbox)
 
 
 ###Import backup code==========

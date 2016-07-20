@@ -23,18 +23,14 @@ shinyServer(function(input, output, session) {
                         toiletdata$IsOpen)
   
   map = leaflet() %>%
-    
-    addProviderTiles(
-      "CartoDB.Positron",
-       options = providerTileOptions(
-         noWrap = TRUE
-         )
-      ) %>%
-   
-      # setView(lat = -24.920527, 
-      #         lng = 134.211614, 
-      #         zoom = 4
-      #         ) %>%
+    addTiles(options = tileOptions(minZoom = 7)) %>%
+    # addProviderTiles(
+    #   "CartoDB.Positron",
+    #    options = providerTileOptions(
+    #      noWrap = TRUE
+    #      )
+    #   ) %>%
+
     
       addLegend(
         "bottomleft",
@@ -90,9 +86,10 @@ shinyServer(function(input, output, session) {
   
   observe({
     
-    leafletProxy("map", 
-                 data = toiletdata) %>%
-      
+    leafletProxy("map",
+                 data = toiletdata
+                 ) %>%
+
       clearShapes() %>%
       
       addPolygons(data = hne, layerId = "LHD") %>%
@@ -105,23 +102,38 @@ shinyServer(function(input, output, session) {
         opacity = 1,
         fillOpacity = 0.8,
         layerId = ~suburb,
-        
+
         clusterOptions = markerClusterOptions(
           zoomToBoundsOnClick = TRUE,
           removeOutsideVisibleBounds = TRUE,
           disableClusteringAtZoom = 12
           ),
-        
+
         color=~colour(IsOpen)
-        
+
         ) %>%
+      setMaxBounds(
+        lat1 = map.buffer[4],
+        lat2 = map.buffer[2],
+        lng1 = map.buffer[3],
+        lng2 = map.buffer[1]
+      ) %>%
 
       fitBounds(
-        lng1 = max(toiletdata$Longitude), 
-        lat1 = max(toiletdata$Latitude),
-        lng2 = min(toiletdata$Longitude), 
-        lat2 = min(toiletdata$Latitude)
+        lat1 = map.bounds[4],
+        lat2 = map.bounds[2],
+        lng1 = map.bounds[3],
+        lng2 = map.bounds[1]
         )
+      
+
+
+      # fitBounds(
+      #   lng1 = max(toiletdata$Longitude), 
+      #   lat1 = max(toiletdata$Latitude),
+      #   lng2 = min(toiletdata$Longitude), 
+      #   lat2 = min(toiletdata$Latitude)
+      #   )
 
       
   })
