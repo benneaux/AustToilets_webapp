@@ -10,9 +10,11 @@
 library(shiny)
 library(leaflet)
 library(DT)
+library(shinythemes)
 
 shinyUI(
   navbarPage(
+    theme = shinytheme("flatly"),
     "Toilets",
     id = "nav",
     tabPanel("Australian Toilet Data",
@@ -26,21 +28,20 @@ shinyUI(
       ),
       
       leafletOutput("map",
-                    width = "100%",
+                    width = "75%",
                     height = "100%"
                  ),
       
       absolutePanel(id = "controls",
                     class = "panel panel-default",
                     fixed = TRUE,
-                    draggable = TRUE,
+                    draggable = FALSE,
                     top = 70,
                     left = "auto",
-                    right = 20,
+                    right = -45,
                     bottom = "auto",
                     width = 400,
                     height = "auto",
-                    opacity = 1,
                     
                     h2("Data Explorer"),
                     
