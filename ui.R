@@ -14,7 +14,7 @@ library(shinythemes)
 
 shinyUI(
   navbarPage(
-    theme = shinytheme("flatly"),
+    theme = "boostrap.css",
     "Toilets",
     id = "nav",
     tabPanel("Australian Toilet Data",
@@ -56,7 +56,8 @@ shinyUI(
     ),
     
     tabPanel("Data",
-      
+      div(
+        class = "outer",
       fluidRow(
         column(3,
           selectInput("states",
@@ -85,7 +86,7 @@ shinyUI(
       hr(),
       
       dataTableOutput("table")
-      ),
+      )),
     
     conditionalPanel(
      "false",

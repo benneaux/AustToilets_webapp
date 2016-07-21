@@ -6,7 +6,7 @@ div.outer {
   right: 0;
   bottom: 0;
   overflow: hidden;
-  padding: 20px;
+  padding: 10px;
 }
 
 /* Customize fonts */
@@ -19,7 +19,7 @@ h1, h2, h3, h4 { font-weight: 400; }
 #controls {
 /* Appearance */
   background-color: white;
-  border: medium solid blue;
+  border: lighter solid blue;
 
 padding: 0 20px 20px 20px;
 cursor: move;
@@ -44,5 +44,11 @@ font-size: 12px;
 
 /* If not using map tiles, show a white background */
   .leaflet-container {
-    background-color: white !important;
+    background-color: white;
   }
+  
+/* Navbar formatting */
+
+#nav {
+  color: #48ca3b;
+}
