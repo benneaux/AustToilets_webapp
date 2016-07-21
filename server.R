@@ -128,7 +128,7 @@ shinyServer(function(input, output, session) {
 
           zoomToBoundsOnClick = TRUE,
           removeOutsideVisibleBounds = TRUE,
-          disableClusteringAtZoom = 10
+          disableClusteringAtZoom = 12
 
         ),
 

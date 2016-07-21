@@ -14,7 +14,6 @@ library(shinythemes)
 
 shinyUI(
   navbarPage(
-    theme = "boostrap.css",
     "Toilets",
     id = "nav",
     tabPanel("Australian Toilet Data",
@@ -32,7 +31,8 @@ shinyUI(
                     height = "100%"
                  ),
       
-      absolutePanel(id = "controls",
+      absolutePanel(
+        id = "controls",
                     class = "panel panel-default",
                     fixed = TRUE,
                     draggable = FALSE,
@@ -43,7 +43,7 @@ shinyUI(
                     width = 400,
                     height = "auto",
                     
-                    h2("Data Explorer"),
+                    h1("Data Explorer"),
                     
                     h3("No. within map bounds:"),
                     
@@ -53,6 +53,7 @@ shinyUI(
                     
                     )
       )
+      
     ),
     
     tabPanel("Data",
@@ -86,11 +87,12 @@ shinyUI(
       hr(),
       
       dataTableOutput("table")
-      )),
+      ),
     
     conditionalPanel(
      "false",
      icon("crosshair")
      )
-    )
-  )
+    ))
+)
+  
